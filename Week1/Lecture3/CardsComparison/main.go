@@ -15,7 +15,12 @@ func main() {
 	fmt.Println("Enter two cards following the pattern to compare the cards: CardValue CardSuit CardValue CardSuit - e.g. 2 Spade 11 Club. Result is -1, 0 and 1 respectively for a weaker, equal and stronger first card.")
 	for {
 		reader := bufio.NewReader(os.Stdin)
-		cardsInputStr, _ := reader.ReadString('\n')
+		cardsInputStr, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Printf("Error: %v", err)
+			continue
+		}
+
 		cards, err := processInput(cardsInputStr)
 		if err != nil {
 			fmt.Printf("Error: %v", err)
