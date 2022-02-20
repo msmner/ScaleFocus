@@ -20,17 +20,17 @@ const (
 	Ace
 )
 
-func (cv CardValue) String() string {
-	cardValues := [...]string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
-	if cv < 2 || cv > 14 {
-		return fmt.Sprintf("Card Value (%d)", int(cv))
-	}
-	return cardValues[cv+2]
-}
+// func (cv CardValue) String() string {
+// 	cardValues := [...]string{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"}
+// 	if cv < 2 || cv > 14 {
+// 		return fmt.Sprintf("Card Value (%d)", int(cv))
+// 	}
+// 	return cardValues[cv+2]
+// }
 
-func (cv CardValue) IsValid() bool {
-	switch cv {
-	case Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace:
+func IsValidValue(arg int) bool {
+	switch arg {
+	case 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14:
 		return true
 	}
 	return false
@@ -39,7 +39,7 @@ func (cv CardValue) IsValid() bool {
 type CardSuit int
 
 const (
-	Club CardSuit = iota + 1
+	Club CardSuit = iota
 	Diamond
 	Heart
 	Spade
@@ -47,15 +47,15 @@ const (
 
 func (cs CardSuit) String() string {
 	cardSuites := [...]string{"Club", "Diamond", "Heart", "Spade"}
-	if cs < 1 || cs > 4 {
+	if cs < 0 || cs > 3 {
 		return fmt.Sprintf("Card Value (%d)", int(cs))
 	}
-	return cardSuites[cs-1]
+	return cardSuites[cs]
 }
 
-func (cs CardSuit) IsValid() bool {
-	switch cs {
-	case Club, Diamond, Heart, Spade:
+func IsValidSuit(arg string) bool {
+	switch arg {
+	case "Club", "Diamond", "Heart", "Spade":
 		return true
 	}
 	return false
@@ -64,4 +64,20 @@ func (cs CardSuit) IsValid() bool {
 type Card struct {
 	Value CardValue
 	Suit  CardSuit
+}
+
+func CompareCards(firstCard Card, secondCard Card) int {
+	if firstCard.Value < secondCard.Value {
+		return -1
+	} else if firstCard.Value > secondCard.Value {
+		return 1
+	} else {
+		if firstCard.Suit < secondCard.Suit {
+			return -1
+		} else if firstCard.Suit > secondCard.Suit {
+			return 1
+		} else {
+			return 0
+		}
+	}
 }
