@@ -39,11 +39,11 @@ func processInput(args string) ([]card.Card, error) {
 
 	firstCardValue, _ := strconv.Atoi(cardsInput[0])
 	firstCardSuit := cardsInput[1]
-	firstCardSuitEnum := convertSuitToEnum(firstCardSuit)
+	firstCardSuitEnum := card.ConvertSuitToEnum(firstCardSuit)
 
 	secondCardValue, _ := strconv.Atoi(cardsInput[2])
 	secondCardSuit := cardsInput[3]
-	secondCardSuitEnum := convertSuitToEnum(secondCardSuit)
+	secondCardSuitEnum := card.ConvertSuitToEnum(secondCardSuit)
 
 	if !card.IsValidValue(firstCardValue) || !card.IsValidValue(secondCardValue) {
 		return nil, errors.New("card value out of bounds - must be between 2 and 14")
@@ -60,20 +60,4 @@ func processInput(args string) ([]card.Card, error) {
 	cards = append(cards, firstCard, secondCard)
 
 	return cards, nil
-}
-
-func convertSuitToEnum(cardSuit string) int {
-	var result int
-	switch cardSuit {
-	case "Club":
-		result = 0
-	case "Diamond":
-		result = 1
-	case "Heart":
-		result = 2
-	case "Spade":
-		result = 3
-	}
-
-	return result
 }

@@ -63,3 +63,19 @@ func CompareCards(firstCard Card, secondCard Card) int {
 		}
 	}
 }
+
+func ConvertSuitToEnum(cardSuit string) int {
+	var result int
+	switch cardSuit {
+	case "Club":
+		result = 0
+	case "Diamond":
+		result = 1
+	case "Heart":
+		result = 2
+	case "Spade":
+		result = 3
+	}
+
+	return result
+}
