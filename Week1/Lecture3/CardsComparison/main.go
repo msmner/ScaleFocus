@@ -12,8 +12,8 @@ import (
 )
 
 func main() {
+	fmt.Println("Enter two cards following the pattern to compare the cards: CardValue CardSuit CardValue CardSuit - e.g. 2 Spade 11 Club. Result is -1, 0 and 1 respectively for a weaker, equal and stronger first card.")
 	for {
-		fmt.Println("\nEnter two cards following the pattern to compare the cards: CardValue CardSuit CardValue CardSuit - e.g. 2 Spade 11 Club. Result is -1, 0 and 1 respectively for a weaker, equal and stronger first card.")
 		reader := bufio.NewReader(os.Stdin)
 		cardsInputStr, _ := reader.ReadString('\n')
 		cards, err := processInput(cardsInputStr)
