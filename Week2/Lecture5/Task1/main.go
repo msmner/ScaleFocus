@@ -5,11 +5,9 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"math/rand"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -28,22 +26,21 @@ func main() {
 			continue
 		}
 
+		// compare the two cards from input
 		result := card.CompareCards(cards[0], cards[1])
+
 		fmt.Printf("Result of comparing the two cards is: %d\n", result)
 
 		//Task 2 max card
-		rand.Seed(time.Now().UnixMilli())
-		dataPointCount := 10
-		cardSuits := []string{"Club", "Diamond", "Heart", "Spade"}
-		cardValues := []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
-		cardsDeck := make([]card.Card, dataPointCount)
-		for i := range cardsDeck {
-			cardsDeck[i] = card.NewCard(card.CardValue(cardValues[rand.Intn(len(cardValues))]), card.CardSuit(card.ConvertSuitToEnum((cardSuits[rand.Intn(len(cardSuits))]))))
-		}
+		// Make a random deck
+		cardsDeck := card.CreateDeckOfCards()
 
+		// find max card in the deck
 		maxDeckCard := card.MaxCard(cardsDeck)
-		maxDeckCardSuit := card.ConvertEnumToSuit(int(maxDeckCard.Suit))
-		fmt.Printf("Result of comparing the deck of cards is: Value: %d Suit: %s\n", maxDeckCard.Value, maxDeckCardSuit)
+
+		//print result
+		fmt.Printf("Cards deck is: %v\n", cardsDeck)
+		fmt.Printf("Result of comparing the deck of cards is: %v\n", maxDeckCard)
 	}
 }
 

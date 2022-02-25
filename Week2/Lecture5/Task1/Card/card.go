@@ -1,5 +1,11 @@
 package card
 
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
 type Card struct {
 	Value CardValue
 	Suit  CardSuit
@@ -23,14 +29,6 @@ const (
 	Ace
 )
 
-func IsValidValue(arg int) bool {
-	switch arg {
-	case 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14:
-		return true
-	}
-	return false
-}
-
 type CardSuit int
 
 const (
@@ -43,6 +41,14 @@ const (
 func IsValidSuit(arg string) bool {
 	switch arg {
 	case "Club", "Diamond", "Heart", "Spade":
+		return true
+	}
+	return false
+}
+
+func IsValidValue(arg int) bool {
+	switch arg {
+	case 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14:
 		return true
 	}
 	return false
@@ -80,9 +86,9 @@ func ConvertSuitToEnum(cardSuit string) int {
 	return result
 }
 
-func ConvertEnumToSuit(cardSuitInt int) string {
+func (cs CardSuit) String() string {
 	var result string
-	switch cardSuitInt {
+	switch cs {
 	case 0:
 		result = "Club"
 	case 1:
@@ -91,8 +97,44 @@ func ConvertEnumToSuit(cardSuitInt int) string {
 		result = "Heart"
 	case 3:
 		result = "Spade"
+	default:
+		return fmt.Sprintf("%d", int(cs))
 	}
+	return result
+}
 
+func (cv CardValue) String() string {
+	var result string
+	switch cv {
+	case 2:
+		result = "2"
+	case 3:
+		result = "3"
+	case 4:
+		result = "4"
+	case 5:
+		result = "5"
+	case 6:
+		result = "6"
+	case 7:
+		result = "7"
+	case 8:
+		result = "8"
+	case 9:
+		result = "9"
+	case 10:
+		result = "10"
+	case 11:
+		result = "Jack"
+	case 12:
+		result = "Queen"
+	case 13:
+		result = "King"
+	case 14:
+		result = "Ace"
+	default:
+		return fmt.Sprintf("%d", int(cv))
+	}
 	return result
 }
 
@@ -101,19 +143,39 @@ func NewCard(value CardValue, suit CardSuit) Card {
 }
 
 func MaxCard(cards []Card) Card {
-	var card Card
+	var maxCard Card
 	for i := range cards {
-		if i == len(cards)-1 {
-			return card
+		isMax := true
+		for k := range cards {
+			result := CompareCards(cards[i], cards[k])
+			switch result {
+			case 0, 1:
+				continue
+			case -1:
+				isMax = false
+			}
+			if !isMax {
+				break
+			}
 		}
-		result := CompareCards(cards[i], cards[i+1])
-		switch result {
-		case 0, 1:
-			card = cards[i]
-		case -1:
-			card = cards[i+1]
+		if isMax {
+			maxCard = cards[i]
+			break
 		}
 	}
 
-	return card
+	return maxCard
+}
+
+func CreateDeckOfCards() []Card {
+	rand.Seed(time.Now().UnixMilli())
+	dataPointCount := 10
+	cardSuits := []string{"Club", "Diamond", "Heart", "Spade"}
+	cardValues := []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
+	cardsDeck := make([]Card, dataPointCount)
+	for i := range cardsDeck {
+		cardsDeck[i] = NewCard(CardValue(cardValues[rand.Intn(len(cardValues))]), CardSuit(ConvertSuitToEnum((cardSuits[rand.Intn(len(cardSuits))]))))
+	}
+
+	return cardsDeck
 }
