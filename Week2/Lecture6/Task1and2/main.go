@@ -34,9 +34,9 @@ func toSlice(l *MagicList) []int {
 	result := []int{}
 	for {
 		if l.LastItem.PrevItem == nil {
-			return append(result, l.LastItem.Value)
+			return append([]int{l.LastItem.Value}, result...)
 		} else {
-			result = append(result, l.LastItem.Value)
+			result = append([]int{l.LastItem.Value}, result...)
 			l.LastItem = l.LastItem.PrevItem
 		}
 	}
