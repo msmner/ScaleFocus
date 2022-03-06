@@ -31,10 +31,9 @@ type Shape interface {
 func (s Shapes) LargestArea() float64 {
 	maxArea := s[0].Area()
 	for _, shape := range s {
-		if maxArea >= shape.Area() {
-			continue
+		if maxArea < shape.Area() {
+			maxArea = shape.Area()
 		}
-		maxArea = shape.Area()
 	}
 
 	return maxArea
