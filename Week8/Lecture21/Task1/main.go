@@ -16,9 +16,6 @@ func main() {
 	log.Fatal(http.ListenAndServe(":9000", router))
 }
 
-type SimpleHandlerResponse struct {
-}
-
 type StoriesResponse struct {
 	TopStories []Story `json:"top_stories"`
 }
