@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	dsn := "root:Manotan88@/go_hackerrank?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:root@/go_hackerrank?charset=utf8mb4&parseTime=True&loc=Local"
 	dbConn, err := sql.Open("mysql", dsn)
 	if err != nil {
 		panic(err)
