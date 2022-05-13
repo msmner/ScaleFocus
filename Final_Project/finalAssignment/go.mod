@@ -3,12 +3,13 @@ module final
 go 1.18
 
 require (
+	github.com/flowchartsman/swaggerui v0.0.0-20210303154956-0e71c297862e
 	github.com/gin-gonic/gin v1.7.7
 	github.com/labstack/echo/v4 v4.7.2
+	github.com/lib/pq v1.10.5
 )
 
 require (
-	github.com/flowchartsman/swaggerui v0.0.0-20210303154956-0e71c297862e // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect

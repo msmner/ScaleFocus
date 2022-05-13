@@ -16,9 +16,7 @@ func CreateCommonMux(h http.Handler) http.Handler {
 	r.Handle("/swagger/", http.StripPrefix("/swagger", swaggerui.Handler(spec)))
 	r.HandleFunc("/app", index)
 	r.Handle("/static/", http.StripPrefix("/static/", fs))
-
-	r.Handle("/api", h)
-
+	r.Handle("/api/", h)
 	return r
 }
 
