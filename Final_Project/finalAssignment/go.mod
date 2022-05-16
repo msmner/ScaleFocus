@@ -5,11 +5,13 @@ go 1.18
 require (
 	github.com/flowchartsman/swaggerui v0.0.0-20210303154956-0e71c297862e
 	github.com/gin-gonic/gin v1.7.7
-	github.com/labstack/echo/v4 v4.7.2
+	github.com/labstack/echo/v4 v4.1.6
 	github.com/lib/pq v1.10.5
+	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
 )
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -25,7 +27,6 @@ require (
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
-	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f // indirect
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
 	golang.org/x/text v0.3.7 // indirect

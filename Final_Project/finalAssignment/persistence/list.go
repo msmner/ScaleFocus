@@ -5,6 +5,7 @@ import (
 	"final/models"
 	"fmt"
 	"log"
+	"strings"
 )
 
 type ListRepository struct {
@@ -15,26 +16,33 @@ func NewListRepository(db *sql.DB) *ListRepository {
 	return &ListRepository{db: db}
 }
 
-func (r *ListRepository) GetLists() ([]models.List, error) {
+func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
+	log.Printf("user in getlists persistence is %v", user)
 	lists := []models.List{}
-	rows, err := r.db.Query("select * from Lists")
-	if err != nil {
-		return lists, fmt.Errorf("error getting lists from the database: %w", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		list := models.List{}
-		err := rows.Scan(&list.ID, &list.Name)
+	listIds := strings.Trim(user.ListIds, ",")
+	listIdsSlice := strings.Split(listIds, ",")
+	log.Printf("list ids after trimming are %s and after splitting are %v", listIds, listIdsSlice)
+	for _, id := range listIdsSlice {
+		rows, err := r.db.Query("select * from lists where id=$1", id)
+		if err != nil {
+			return lists, fmt.Errorf("error getting list from the database: %w", err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			list := models.List{}
+			err := rows.Scan(&list.ID, &list.Name)
+			if err != nil {
+				return lists, err
+			}
+			lists = append(lists, list)
+		}
+
+		err = rows.Err()
 		if err != nil {
 			return lists, err
 		}
-		lists = append(lists, list)
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return lists, err
-	}
 	return lists, nil
 }
 

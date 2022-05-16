@@ -25,7 +25,9 @@ func (lc *ListController) CreateList(c echo.Context) (err error) {
 		return err
 	}
 
-	createdList, err := lc.listService.CreateList(list.Name)
+	user := c.Get("user")
+	log.Printf("create list controller user is %v", user)
+	createdList, err := lc.listService.CreateList(list.Name, user)
 	if err != nil {
 		log.Printf("Error creating list: %v %v", err, createdList)
 		return fmt.Errorf("error creating list: %w", err)
@@ -35,21 +37,26 @@ func (lc *ListController) CreateList(c echo.Context) (err error) {
 }
 
 func (lc *ListController) GetLists(c echo.Context) (err error) {
-	lists, err := lc.listService.GetLists()
+	log.Printf("in get lists controller")
+	user := c.Get("user")
+	log.Printf("user in getlists controller is %v", user)
+	lists, err := lc.listService.GetLists(user)
 	if err != nil {
 		log.Printf("Error getting lists: %v", err)
 		return fmt.Errorf("error getting lists: %w", err)
 	}
+
 	return c.JSON(http.StatusOK, lists)
 }
 
 func (lc *ListController) DeleteList(c echo.Context) (err error) {
 	idStr := c.Param("id")
+	user := c.Get("user")
 	idInt, err := strconv.Atoi(idStr)
 	if err != nil {
 		return err
 	}
-	lc.listService.DeleteList(int64(idInt))
+	lc.listService.DeleteList(user, int64(idInt))
 	log.Printf("Delete list id: %d", idInt)
 	return c.JSON(http.StatusOK, "")
 }

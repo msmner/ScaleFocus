@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"final/auth"
 	"final/cmd"
 	"final/controllers"
 	"final/persistence"
@@ -48,9 +49,16 @@ func main() {
 
 	fmt.Println("Successfully connected!")
 
+	//basic authentication
+	userRepository := persistence.NewUserRepository(db)
+	userService := services.NewUserService(userRepository)
+	authMiddleware := auth.NewAuthMiddleware(userService)
+	authMiddleware.Authenticate(router)
+
+	//controllers
 	listRepository := persistence.NewListRepository(db)
 	taskRepository := persistence.NewTaskRepository(db)
-	listService := services.NewListService(listRepository)
+	listService := services.NewListService(listRepository, userRepository)
 	taskService := services.NewTaskService(taskRepository)
 	taskController := controllers.NewTaskController(taskService)
 	listController := controllers.NewListController(listService)
