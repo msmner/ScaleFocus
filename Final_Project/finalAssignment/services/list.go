@@ -49,9 +49,9 @@ func (ls *ListService) GetLists(username interface{}) ([]models.List, error) {
 	return lists, nil
 }
 
-func (ls *ListService) DeleteList(username interface{}, id int64) error {
-	err := ls.listRepository.DeleteList(id)
-	err = ls.userRepository.DeleteListFromUser(id, username.(string))
+func (ls *ListService) DeleteList(username interface{}, listId int64) error {
+	err := ls.listRepository.DeleteList(listId)
+	err = ls.userRepository.DeleteListFromUser(listId, username.(string))
 	if err != nil {
 		return err
 	}

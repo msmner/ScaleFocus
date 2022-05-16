@@ -20,7 +20,7 @@ func NewAuthMiddleware(us *services.UserService) *AuthMiddleware {
 func (auth *AuthMiddleware) Authenticate(e *echo.Echo) {
 	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
 		user, err := auth.userService.GetUser(username)
-		log.Printf("in auth username is %s pass is %s hashed pass is %s user is %v", username, password, user.PasswordHash, user)
+		log.Printf("in auth username is %s pass is %s hashed pass is %s user is %v error is %v", username, password, user.PasswordHash, user, err)
 		if err != nil {
 			return false, err
 		}
