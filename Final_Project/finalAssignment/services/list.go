@@ -3,7 +3,6 @@ package services
 import (
 	"final/models"
 	"final/persistence"
-	"log"
 )
 
 type ListService struct {
@@ -21,7 +20,7 @@ func (ls *ListService) CreateList(name string, username interface{}) (models.Lis
 	if err != nil {
 		return list, err
 	}
-	log.Printf("user in createlist service is %v", username)
+
 	err = ls.userRepository.AddListIdToUser(username.(string), id)
 	if err != nil {
 		return list, err
@@ -37,7 +36,6 @@ func (ls *ListService) CreateList(name string, username interface{}) (models.Lis
 
 func (ls *ListService) GetLists(username interface{}) ([]models.List, error) {
 	user, err := ls.userRepository.GetUser(username.(string))
-	log.Printf("username in getlists service is %v, user is %v", username, user)
 	if err != nil {
 		return []models.List{}, err
 	}
@@ -51,6 +49,9 @@ func (ls *ListService) GetLists(username interface{}) ([]models.List, error) {
 
 func (ls *ListService) DeleteList(username interface{}, listId int64) error {
 	err := ls.listRepository.DeleteList(listId)
+	if err != nil {
+		return err
+	}
 	err = ls.userRepository.DeleteListFromUser(listId, username.(string))
 	if err != nil {
 		return err

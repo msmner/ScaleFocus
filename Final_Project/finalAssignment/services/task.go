@@ -3,7 +3,6 @@ package services
 import (
 	"final/models"
 	"final/persistence"
-	"log"
 )
 
 type TaskService struct {
@@ -15,14 +14,12 @@ func NewTaskService(tr *persistence.TaskRepository) *TaskService {
 }
 
 func (ts *TaskService) CreateTask(text string, listId int64, completed bool) (models.Task, error) {
-	log.Printf("task service input parameters %s %d %v", text, listId, completed)
 	task := models.Task{Text: text, ListID: int(listId), Completed: completed}
 	id, err := ts.taskRepository.InsertTask(task)
 	if err != nil {
 		return task, err
 	}
 
-	log.Printf("id of inserted task %d", id)
 	createdTask, err := ts.taskRepository.GetTask(id)
 	if err != nil {
 		return createdTask, err

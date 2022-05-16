@@ -5,8 +5,9 @@ go 1.18
 require (
 	github.com/flowchartsman/swaggerui v0.0.0-20210303154956-0e71c297862e
 	github.com/gin-gonic/gin v1.7.7
+	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.1.6
-	github.com/lib/pq v1.10.5
+	github.com/lib/pq v1.10.6
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
 )
 

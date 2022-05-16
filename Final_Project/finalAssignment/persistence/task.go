@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"final/models"
 	"fmt"
-	"log"
 )
 
 type TaskRepository struct {
@@ -42,7 +41,6 @@ func (r *TaskRepository) DeleteTask(id int64) error {
 	deleteQuery := `DELETE FROM tasks WHERE ID=$1`
 	_, err := r.db.Exec(deleteQuery, id)
 	if err != nil {
-		log.Printf("error deleting %s", err)
 		return err
 	}
 

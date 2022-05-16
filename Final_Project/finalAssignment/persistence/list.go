@@ -17,12 +17,10 @@ func NewListRepository(db *sql.DB) *ListRepository {
 }
 
 func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
-	log.Printf("user in getlists persistence is %v", user)
 	lists := []models.List{}
 	if user.ListIds != "" {
 		listIds := strings.Trim(user.ListIds, ",")
 		listIdsSlice := strings.Split(listIds, ",")
-		log.Printf("list ids after trimming are %s and after splitting are %v", listIds, listIdsSlice)
 		for _, id := range listIdsSlice {
 			rows, err := r.db.Query("select * from lists where id=$1", id)
 			if err != nil {

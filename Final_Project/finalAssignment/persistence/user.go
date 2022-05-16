@@ -18,7 +18,6 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) GetUser(username string) (models.User, error) {
-	log.Printf("username in getuser persistence is %s", username)
 	user := models.User{}
 	query := `SELECT * FROM users WHERE username=$1`
 	rows, err := r.db.Query(query, username)
@@ -47,10 +46,8 @@ func (ur *UserRepository) AddListIdToUser(username string, listId int64) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("user in updateuser persistence is %v", username)
 	newlistId := fmt.Sprintf(",%d", listId)
 	updatedListIds := user.ListIds + newlistId
-	log.Printf("updatedlist ids in persistence are %s", updatedListIds)
 	query := `UPDATE users SET listids=$1 WHERE username=$2`
 	_, err = ur.db.Exec(query, updatedListIds, username)
 	if err != nil {
@@ -67,11 +64,8 @@ func (ur *UserRepository) DeleteListFromUser(listId int64, username string) erro
 	}
 	listIds := strings.Trim(user.ListIds, ",")
 	listIdsSlice := strings.Split(listIds, ",")
-	log.Printf("list ids slice in delete list from user persistence is %v", listIdsSlice)
 	for i, v := range listIdsSlice {
-		log.Printf("list id string from slice in delete list from user persistence is %v", v)
 		id, err := strconv.Atoi(v)
-		log.Printf("list id int from slice in delete list from user persistence is %v", id)
 
 		if err != nil {
 			return err
@@ -85,8 +79,6 @@ func (ur *UserRepository) DeleteListFromUser(listId int64, username string) erro
 	}
 
 	newListIds := strings.Join(listIdsSlice, ",")
-	log.Printf("new list ids slice in delete list from user persistence is %v", newListIds)
-
 	query := `UPDATE users SET listIds=$1 WHERE username=$2`
 	_, err = ur.db.Exec(query, newListIds, username)
 	if err != nil {

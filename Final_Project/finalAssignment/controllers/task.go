@@ -4,7 +4,6 @@ import (
 	"final/models"
 	"final/services"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -40,7 +39,6 @@ func (tc *TaskController) CreateTask(c echo.Context) (err error) {
 }
 
 func (tc *TaskController) GetTasks(c echo.Context) (err error) {
-	log.Printf("in get tasks controller")
 	listIdStr := c.Param("id")
 	listIdInt, err := strconv.Atoi(listIdStr)
 	if err != nil {
