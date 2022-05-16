@@ -41,7 +41,6 @@ func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
 		if err != nil {
 			return lists, err
 		}
-	}
 
 	return lists, nil
 }

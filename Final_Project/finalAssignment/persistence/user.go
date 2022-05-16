@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"final/models"
 	"fmt"
-	"log"
 )
 
 type UserRepository struct {
@@ -25,8 +24,9 @@ func (r *UserRepository) GetUser(username string) (models.User, error) {
 		return user, err
 	}
 	defer rows.Close()
-	for rows.Next() {
+	for rows.Next() 
 		err := rows.Scan(&user.Username, &user.PasswordHash, &user.ListIds)
+
 		if err != nil {
 			return user, err
 		}
