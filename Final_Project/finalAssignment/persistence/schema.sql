@@ -1,0 +1,23 @@
+-- name of db is todo
+
+CREATE TABLE IF NOT EXISTS Lists (
+    Id SERIAL,
+    Name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Tasks (
+    Id SERIAL,
+    Text TEXT NOT NULL,
+    ListId INTEGER NOT NULL,
+    Completed BOOLEAN NOT NULL,
+    FOREIGN KEY (ListId)
+    REFERENCES Lists (Id)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    Username TEXT NOT NULL UNIQUE PRIMARY KEY,
+    PasswordHash TEXT NOT NULL,
+	ListId INTEGER
+)
