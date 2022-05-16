@@ -3,7 +3,6 @@ package persistence
 import (
 	"database/sql"
 	"final/models"
-	"fmt"
 	"log"
 )
 
@@ -26,7 +25,7 @@ func (r *UserRepository) GetUser(username string) (models.User, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err := rows.Scan(&user.Username, &user.PasswordHash, &user.ListIds)
+		err := rows.Scan(&user.Username, &user.PasswordHash, &user.ListId)
 		if err != nil {
 			return user, err
 		}
@@ -44,12 +43,10 @@ func (ur *UserRepository) AddListIdToUser(username string, listId int64) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("user in updateuser persistence is %v", username)
-	newlistId := fmt.Sprintf("%d,", listId)
-	updatedListIds := user.ListIds + newlistId
-	log.Printf("updatedlist ids in persistence are %s", updatedListIds)
-	query := `UPDATE users SET listids=$1 WHERE username=$2`
-	_, err = ur.db.Exec(query, updatedListIds, username)
+
+	log.Printf("user in updateuser persistence is %v", user)
+	query := `INSERT INTO users (Username, PasswordHash, ListId) VALUES ($1, $2, $3)`
+	_, err = ur.db.Exec(query, username, user.PasswordHash, listId)
 	if err != nil {
 		return err
 	}
@@ -58,5 +55,10 @@ func (ur *UserRepository) AddListIdToUser(username string, listId int64) error {
 }
 
 func (ur *UserRepository) DeleteListFromUser(id int64, username string) error {
-
+	query := `DELETE FROM users WHERE username=$1`
+	_, err := ur.db.Exec(query, username)
+	if err != nil {
+		return err
+	}
+	return nil
 }

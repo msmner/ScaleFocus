@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS Tasks (
 );
 
 CREATE TABLE IF NOT EXISTS Users (
-    Id SERIAL,
-    Username TEXT NOT NULL,
-    PasswordHash TEXT NOT NULL
+    Username TEXT NOT NULL UNIQUE PRIMARY KEY,
+    PasswordHash TEXT NOT NULL,
+	ListId INTEGER
 )

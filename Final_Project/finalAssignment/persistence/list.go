@@ -5,7 +5,6 @@ import (
 	"final/models"
 	"fmt"
 	"log"
-	"strings"
 )
 
 type ListRepository struct {
@@ -19,11 +18,15 @@ func NewListRepository(db *sql.DB) *ListRepository {
 func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
 	log.Printf("user in getlists persistence is %v", user)
 	lists := []models.List{}
-	listIds := strings.Trim(user.ListIds, ",")
-	listIdsSlice := strings.Split(listIds, ",")
-	log.Printf("list ids after trimming are %s and after splitting are %v", listIds, listIdsSlice)
-	for _, id := range listIdsSlice {
-		rows, err := r.db.Query("select * from lists where id=$1", id)
+	rowsListIds, err := r.db.Query("select listId from users where username=$1", user.Username)
+	if err != nil {
+		return lists, err
+	}
+
+	defer rowsListIds.Close()
+	for rowsListIds.Next() {
+		var listId int64
+		rows, err := r.db.Query("select * from lists where id=$1", rowsListIds.Scan(&listId))
 		if err != nil {
 			return lists, fmt.Errorf("error getting list from the database: %w", err)
 		}
@@ -35,11 +38,11 @@ func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
 				return lists, err
 			}
 			lists = append(lists, list)
-		}
 
-		err = rows.Err()
-		if err != nil {
-			return lists, err
+			err = rows.Err()
+			if err != nil {
+				return lists, err
+			}
 		}
 	}
 
