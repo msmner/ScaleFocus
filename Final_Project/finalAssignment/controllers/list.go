@@ -1,18 +1,18 @@
 package controllers
 
 import (
+	"final/interfaces"
 	"final/models"
-	"final/services"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 type ListController struct {
-	listService *services.ListService
+	listService interfaces.IListService
 }
 
-func NewListController(ls *services.ListService) *ListController {
+func NewListController(ls interfaces.IListService) *ListController {
 	return &ListController{listService: ls}
 }
 

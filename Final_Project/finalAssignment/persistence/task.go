@@ -37,7 +37,7 @@ func (r *TaskRepository) GetTasks(listId int) ([]models.Task, error) {
 	return tasks, nil
 }
 
-func (r *TaskRepository) DeleteTask(id int64) error {
+func (r *TaskRepository) DeleteTask(id int) error {
 	deleteQuery := `DELETE FROM tasks WHERE ID=$1`
 	_, err := r.db.Exec(deleteQuery, id)
 	if err != nil {
@@ -47,7 +47,7 @@ func (r *TaskRepository) DeleteTask(id int64) error {
 	return nil
 }
 
-func (r *TaskRepository) UpdateTask(id int64) (models.Task, error) {
+func (r *TaskRepository) UpdateTask(id int) (models.Task, error) {
 	task, err := r.GetTask(id)
 	if err != nil {
 		return task, err
@@ -68,7 +68,7 @@ func (r *TaskRepository) UpdateTask(id int64) (models.Task, error) {
 	return task, nil
 }
 
-func (r *TaskRepository) GetTask(id int64) (models.Task, error) {
+func (r *TaskRepository) GetTask(id int) (models.Task, error) {
 	task := models.Task{}
 	query := `SELECT * FROM tasks WHERE id=$1`
 	rows, err := r.db.Query(query, id)
@@ -90,8 +90,8 @@ func (r *TaskRepository) GetTask(id int64) (models.Task, error) {
 	return task, nil
 }
 
-func (r *TaskRepository) InsertTask(task models.Task) (int64, error) {
-	var id int64
+func (r *TaskRepository) InsertTask(task models.Task) (int, error) {
+	var id int
 	insertQuery := `INSERT INTO tasks(Text, ListId, Completed) VALUES($1, $2, $3) RETURNING id`
 	err := r.db.QueryRow(insertQuery, task.Text, task.ListID, task.Completed).Scan(&id)
 	if err != nil {

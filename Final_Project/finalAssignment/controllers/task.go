@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"final/interfaces"
 	"final/models"
-	"final/services"
 	"net/http"
 	"strconv"
 
@@ -10,10 +10,10 @@ import (
 )
 
 type TaskController struct {
-	taskService *services.TaskService
+	taskService interfaces.ITaskService
 }
 
-func NewTaskController(ts *services.TaskService) *TaskController {
+func NewTaskController(ts interfaces.ITaskService) *TaskController {
 	return &TaskController{taskService: ts}
 }
 
@@ -29,7 +29,7 @@ func (tc *TaskController) CreateTask(c echo.Context) error {
 		return err
 	}
 
-	createdTask, err := tc.taskService.CreateTask(task.Text, int64(listIdInt), false)
+	createdTask, err := tc.taskService.CreateTask(task.Text, listIdInt, false)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (tc *TaskController) UpdateTask(c echo.Context) error {
 		return err
 	}
 
-	task, err := tc.taskService.UpdateTask(int64(taskIdInt))
+	task, err := tc.taskService.UpdateTask(taskIdInt)
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func (tc *TaskController) DeleteTask(c echo.Context) error {
 		return err
 	}
 
-	tc.taskService.DeleteTask(int64(listIdInt))
+	tc.taskService.DeleteTask(listIdInt)
 
 	return c.JSON(http.StatusOK, "")
 }

@@ -1,20 +1,20 @@
 package services
 
 import (
+	"final/interfaces"
 	"final/models"
-	"final/persistence"
 	"fmt"
 )
 
 type TaskService struct {
-	taskRepository *persistence.TaskRepository
+	taskRepository interfaces.ITaskRepository
 }
 
-func NewTaskService(tr *persistence.TaskRepository) *TaskService {
+func NewTaskService(tr interfaces.ITaskRepository) *TaskService {
 	return &TaskService{taskRepository: tr}
 }
 
-func (ts *TaskService) CreateTask(text string, listId int64, completed bool) (models.Task, error) {
+func (ts *TaskService) CreateTask(text string, listId int, completed bool) (models.Task, error) {
 	task := models.Task{Text: text, ListID: int(listId), Completed: completed}
 	id, err := ts.taskRepository.InsertTask(task)
 	if err != nil {
@@ -38,7 +38,7 @@ func (ts *TaskService) GetTasks(listId int) ([]models.Task, error) {
 	return tasks, nil
 }
 
-func (ts *TaskService) UpdateTask(taskId int64) (models.Task, error) {
+func (ts *TaskService) UpdateTask(taskId int) (models.Task, error) {
 	task, err := ts.taskRepository.UpdateTask(taskId)
 	if err != nil {
 		return task, fmt.Errorf("error updating task: %w", err)
@@ -47,7 +47,7 @@ func (ts *TaskService) UpdateTask(taskId int64) (models.Task, error) {
 	return task, nil
 }
 
-func (ts *TaskService) DeleteTask(id int64) error {
+func (ts *TaskService) DeleteTask(id int) error {
 	err := ts.taskRepository.DeleteTask(id)
 	if err != nil {
 		return fmt.Errorf("error deleting task: %w", err)

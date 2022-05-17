@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"final/services"
+	"final/interfaces"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,10 +10,10 @@ import (
 )
 
 type ExportController struct {
-	exportService *services.ExportService
+	exportService interfaces.IExportService
 }
 
-func NewExportController(es *services.ExportService) *ExportController {
+func NewExportController(es interfaces.IExportService) *ExportController {
 	return &ExportController{exportService: es}
 }
 
@@ -24,12 +24,12 @@ func (ec *ExportController) ExportFile(c echo.Context) error {
 		return err
 	}
 
-	thepath, err := filepath.Abs(filepath.Dir(file.Name()))
+	thePath, err := filepath.Abs(filepath.Dir(file.Name()))
 	if err != nil {
 		return err
 	}
 
-	fileStat, err := os.Stat(thepath)
+	fileStat, err := os.Stat(thePath)
 	if err != nil {
 		return err
 	}

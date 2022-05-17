@@ -1,18 +1,18 @@
 package services
 
 import (
+	"final/interfaces"
 	"final/models"
-	"final/persistence"
 	"fmt"
 	"strconv"
 )
 
 type ListService struct {
-	listRepository *persistence.ListRepository
-	userRepository *persistence.UserRepository
+	listRepository interfaces.IListRepository
+	userRepository interfaces.IUserRepository
 }
 
-func NewListService(lr *persistence.ListRepository, ur *persistence.UserRepository) *ListService {
+func NewListService(lr interfaces.IListRepository, ur interfaces.IUserRepository) *ListService {
 	return &ListService{listRepository: lr, userRepository: ur}
 }
 
@@ -48,7 +48,7 @@ func (ls *ListService) DeleteList(username interface{}, listId string) error {
 	if err != nil {
 		return fmt.Errorf("error converting listid: %w", err)
 	}
-	err = ls.listRepository.DeleteList(int64(id))
+	err = ls.listRepository.DeleteList(id)
 	if err != nil {
 		return fmt.Errorf("error deleting list: %w", err)
 	}

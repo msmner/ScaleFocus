@@ -1,17 +1,17 @@
 package controllers
 
 import (
-	"final/services"
+	"final/interfaces"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 type WeatherController struct {
-	weatherService *services.WeatherService
+	weatherService interfaces.IWeatherService
 }
 
-func NewWeatherController(ws *services.WeatherService) *WeatherController {
+func NewWeatherController(ws interfaces.IWeatherService) *WeatherController {
 	return &WeatherController{weatherService: ws}
 }
 

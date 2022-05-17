@@ -2,18 +2,18 @@ package services
 
 import (
 	"encoding/csv"
-	"final/persistence"
+	"final/interfaces"
 	"fmt"
 	"os"
 )
 
 type ExportService struct {
-	listRepository *persistence.ListRepository
-	taskRepository *persistence.TaskRepository
-	userRepository *persistence.UserRepository
+	listRepository interfaces.IListRepository
+	taskRepository interfaces.ITaskRepository
+	userRepository interfaces.IUserRepository
 }
 
-func NewExportService(lr *persistence.ListRepository, tr *persistence.TaskRepository, ur *persistence.UserRepository) *ExportService {
+func NewExportService(lr interfaces.IListRepository, tr interfaces.ITaskRepository, ur interfaces.IUserRepository) *ExportService {
 	return &ExportService{listRepository: lr, taskRepository: tr, userRepository: ur}
 }
 
@@ -28,7 +28,7 @@ func (es *ExportService) CreateFile(username interface{}) (*os.File, error) {
 		return nil, fmt.Errorf("error creating csv file: %w", err)
 	}
 
-	csvwriter := csv.NewWriter(csvFile)
+	csvWriter := csv.NewWriter(csvFile)
 	lists, err := es.listRepository.GetLists(user)
 	if err != nil {
 		return nil, fmt.Errorf("error getting lists for user %w", err)
@@ -48,13 +48,13 @@ func (es *ExportService) CreateFile(username interface{}) (*os.File, error) {
 	}
 
 	for _, taskRow := range taskData {
-		err := csvwriter.Write(taskRow)
+		err := csvWriter.Write(taskRow)
 		if err != nil {
 			return nil, fmt.Errorf("error writing tasks to csv %w", err)
 		}
 	}
 
-	csvwriter.Flush()
+	csvWriter.Flush()
 	csvFile.Close()
 
 	return csvFile, nil

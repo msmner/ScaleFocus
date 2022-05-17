@@ -46,7 +46,7 @@ func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
 	return lists, nil
 }
 
-func (r *ListRepository) DeleteList(id int64) error {
+func (r *ListRepository) DeleteList(id int) error {
 	deleteQuery := `DELETE FROM lists WHERE ID=$1`
 	_, err := r.db.Exec(deleteQuery, id)
 	if err != nil {

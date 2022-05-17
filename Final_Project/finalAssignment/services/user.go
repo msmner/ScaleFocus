@@ -1,16 +1,16 @@
 package services
 
 import (
+	"final/interfaces"
 	"final/models"
-	"final/persistence"
 	"fmt"
 )
 
 type UserService struct {
-	userRepository *persistence.UserRepository
+	userRepository interfaces.IUserRepository
 }
 
-func NewUserService(ur *persistence.UserRepository) *UserService {
+func NewUserService(ur interfaces.IUserRepository) *UserService {
 	return &UserService{userRepository: ur}
 }
 

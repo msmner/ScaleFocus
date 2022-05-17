@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"final/services"
+	"final/interfaces"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -9,10 +9,10 @@ import (
 )
 
 type AuthMiddleware struct {
-	userService *services.UserService
+	userService interfaces.IUserService
 }
 
-func NewAuthMiddleware(us *services.UserService) *AuthMiddleware {
+func NewAuthMiddleware(us interfaces.IUserService) *AuthMiddleware {
 	return &AuthMiddleware{userService: us}
 }
 
