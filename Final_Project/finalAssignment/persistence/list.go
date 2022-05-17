@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"final/models"
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -26,19 +25,20 @@ func (r *ListRepository) GetLists(user models.User) ([]models.List, error) {
 			if err != nil {
 				return lists, fmt.Errorf("error getting list from the database: %w", err)
 			}
+
 			defer rows.Close()
 			for rows.Next() {
 				list := models.List{}
 				err := rows.Scan(&list.ID, &list.Name)
 				if err != nil {
-					return lists, err
+					return lists, fmt.Errorf("error scanning rows for get lists: %w", err)
 				}
 				lists = append(lists, list)
 			}
 
 			err = rows.Err()
 			if err != nil {
-				return lists, err
+				return lists, fmt.Errorf("rows error getting lists: %w", err)
 			}
 		}
 	}
@@ -50,46 +50,20 @@ func (r *ListRepository) DeleteList(id int64) error {
 	deleteQuery := `DELETE FROM lists WHERE ID=$1`
 	_, err := r.db.Exec(deleteQuery, id)
 	if err != nil {
-		log.Printf("error deleting %s", err)
-		return err
-	}
-
-	if err != nil {
-		return err
+		return fmt.Errorf("error executing query delete list: %w", err)
 	}
 
 	return nil
 }
 
-func (r *ListRepository) GetList(id int64) (models.List, error) {
-	list := models.List{}
-	query := `SELECT * FROM lists WHERE id=$1`
-	rows, err := r.db.Query(query, id)
-	if err != nil {
-		return list, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		err := rows.Scan(&list.ID, &list.Name)
-		if err != nil {
-			return list, err
-		}
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return list, err
-	}
-	return list, nil
-}
-
-func (r *ListRepository) InsertList(list models.List) (int64, error) {
-	var id int64
+func (r *ListRepository) InsertList(name string) (models.List, error) {
+	var id int
 	insertQuery := `INSERT INTO lists(Name) VALUES($1) RETURNING ID`
-	err := r.db.QueryRow(insertQuery, list.Name).Scan(&id)
+	err := r.db.QueryRow(insertQuery, name).Scan(&id)
+	list := models.List{ID: id, Name: name}
 	if err != nil {
-		return 0, fmt.Errorf("error inserting new list: %w", err)
+		return list, fmt.Errorf("error inserting new list: %w", err)
 	}
 
-	return id, nil
+	return list, nil
 }

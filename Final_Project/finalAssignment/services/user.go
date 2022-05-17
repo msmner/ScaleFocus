@@ -3,6 +3,7 @@ package services
 import (
 	"final/models"
 	"final/persistence"
+	"fmt"
 )
 
 type UserService struct {
@@ -16,7 +17,7 @@ func NewUserService(ur *persistence.UserRepository) *UserService {
 func (us *UserService) GetUser(username string) (models.User, error) {
 	user, err := us.userRepository.GetUser(username)
 	if err != nil {
-		return user, err
+		return user, fmt.Errorf("error getting user: %w", err)
 	}
 
 	return user, nil

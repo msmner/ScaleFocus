@@ -3,9 +3,7 @@ package controllers
 import (
 	"final/models"
 	"final/services"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,7 +16,7 @@ func NewListController(ls *services.ListService) *ListController {
 	return &ListController{listService: ls}
 }
 
-func (lc *ListController) CreateList(c echo.Context) (err error) {
+func (lc *ListController) CreateList(c echo.Context) error {
 	list := models.List{}
 	if err := c.Bind(&list); err != nil {
 		return err
@@ -27,29 +25,29 @@ func (lc *ListController) CreateList(c echo.Context) (err error) {
 	user := c.Get("user")
 	createdList, err := lc.listService.CreateList(list.Name, user)
 	if err != nil {
-		return fmt.Errorf("error creating list: %w", err)
+		return err
 	}
 
 	return c.JSON(http.StatusOK, createdList)
 }
 
-func (lc *ListController) GetLists(c echo.Context) (err error) {
+func (lc *ListController) GetLists(c echo.Context) error {
 	user := c.Get("user")
 	lists, err := lc.listService.GetLists(user)
 	if err != nil {
-		return fmt.Errorf("error getting lists: %w", err)
+		return err
 	}
 
 	return c.JSON(http.StatusOK, lists)
 }
 
-func (lc *ListController) DeleteList(c echo.Context) (err error) {
-	idStr := c.Param("id")
+func (lc *ListController) DeleteList(c echo.Context) error {
+	id := c.Param("id")
 	user := c.Get("user")
-	idInt, err := strconv.Atoi(idStr)
+	err := lc.listService.DeleteList(user, id)
 	if err != nil {
 		return err
 	}
-	lc.listService.DeleteList(user, int64(idInt))
+
 	return c.JSON(http.StatusOK, "")
 }

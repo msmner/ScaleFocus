@@ -3,7 +3,6 @@ package controllers
 import (
 	"final/models"
 	"final/services"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -18,7 +17,7 @@ func NewTaskController(ts *services.TaskService) *TaskController {
 	return &TaskController{taskService: ts}
 }
 
-func (tc *TaskController) CreateTask(c echo.Context) (err error) {
+func (tc *TaskController) CreateTask(c echo.Context) error {
 	task := models.Task{}
 	if err := c.Bind(&task); err != nil {
 		return err
@@ -32,27 +31,27 @@ func (tc *TaskController) CreateTask(c echo.Context) (err error) {
 
 	createdTask, err := tc.taskService.CreateTask(task.Text, int64(listIdInt), false)
 	if err != nil {
-		return fmt.Errorf("error creating task %w", err)
+		return err
 	}
 
 	return c.JSON(http.StatusOK, createdTask)
 }
 
-func (tc *TaskController) GetTasks(c echo.Context) (err error) {
+func (tc *TaskController) GetTasks(c echo.Context) error {
 	listIdStr := c.Param("id")
 	listIdInt, err := strconv.Atoi(listIdStr)
 	if err != nil {
 		return err
 	}
-	tasks, err := tc.taskService.GetTasks(int64(listIdInt))
+	tasks, err := tc.taskService.GetTasks(listIdInt)
 	if err != nil {
-		return fmt.Errorf("error getting tasks: %w", err)
+		return err
 	}
 
 	return c.JSON(http.StatusOK, tasks)
 }
 
-func (tc *TaskController) UpdateTask(c echo.Context) (err error) {
+func (tc *TaskController) UpdateTask(c echo.Context) error {
 	taskIdStr := c.Param("id")
 	taskIdInt, err := strconv.Atoi(taskIdStr)
 	if err != nil {
@@ -61,13 +60,13 @@ func (tc *TaskController) UpdateTask(c echo.Context) (err error) {
 
 	task, err := tc.taskService.UpdateTask(int64(taskIdInt))
 	if err != nil {
-		return fmt.Errorf("error updating task %w", err)
+		return err
 	}
 
 	return c.JSON(http.StatusOK, task)
 }
 
-func (tc *TaskController) DeleteTask(c echo.Context) (err error) {
+func (tc *TaskController) DeleteTask(c echo.Context) error {
 	listIdStr := c.Param("id")
 	listIdInt, err := strconv.Atoi(listIdStr)
 	if err != nil {

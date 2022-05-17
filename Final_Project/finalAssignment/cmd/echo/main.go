@@ -15,7 +15,6 @@ import (
 )
 
 func main() {
-	router := echo.New()
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading configuration variables %s", err)
@@ -28,13 +27,15 @@ func main() {
 	}
 	defer db.Close()
 
+	router := echo.New()
+
 	//basic authentication
 	userRepository := persistence.NewUserRepository(db)
 	userService := services.NewUserService(userRepository)
 	authMiddleware := auth.NewAuthMiddleware(userService)
 	authMiddleware.Authenticate(router)
 
-	//controllers
+	//controllers and services
 	listRepository := persistence.NewListRepository(db)
 	taskRepository := persistence.NewTaskRepository(db)
 	listService := services.NewListService(listRepository, userRepository)
@@ -43,11 +44,14 @@ func main() {
 	listController := controllers.NewListController(listService)
 	weatherService := services.NewWeatherService()
 	weatherController := controllers.NewWeatherController(weatherService)
+	exportService := services.NewExportService(listRepository, taskRepository, userRepository)
+	exportController := controllers.NewExportController(exportService)
 
 	//list routes
 	router.GET("/api/lists", listController.GetLists)
 	router.POST("/api/lists", listController.CreateList)
 	router.DELETE("/api/lists/:id", listController.DeleteList)
+	router.GET("/api/list/export", exportController.ExportFile)
 
 	//task routes
 	router.POST("/api/lists/:id/tasks", taskController.CreateTask)

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 type WeatherService struct{}
@@ -29,29 +30,40 @@ func NewWeatherService() *WeatherService {
 	return &WeatherService{}
 }
 
-func (ws *WeatherService) GetWeather(lat float64, long float64) (models.WeatherResponse, error) {
+func (ws *WeatherService) GetWeather(latHeader string, lonHeader string) (models.WeatherResponse, error) {
 	weatherResponse := models.WeatherResponse{}
+	latitude, err := strconv.ParseFloat(latHeader, 32)
+	if err != nil {
+		return weatherResponse, err
+	}
+
+	longitude, err := strconv.ParseFloat(lonHeader, 32)
+	if err != nil {
+		return weatherResponse, err
+	}
+
 	apiKey := os.Getenv("apiKey")
-	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", lat, long, apiKey)
+	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", latitude, longitude, apiKey)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return weatherResponse, fmt.Errorf("error building the request to weather api: %w", err)
+		return weatherResponse, err
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return weatherResponse, fmt.Errorf("error getting the response from the weather api: %w", err)
+		return weatherResponse, err
 	}
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return weatherResponse, fmt.Errorf("error reading the body of the response from the weather api: %w", err)
+		return weatherResponse, err
 	}
+
 	var response Response
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		return weatherResponse, fmt.Errorf("error deserializing the response body from the weather api: %w", err)
+		return weatherResponse, err
 	}
 
 	weatherResponse.FormattedTemp = fmt.Sprintf("%.2f", response.Main.Temp)

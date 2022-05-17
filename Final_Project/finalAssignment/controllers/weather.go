@@ -3,7 +3,6 @@ package controllers
 import (
 	"final/services"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,23 +15,15 @@ func NewWeatherController(ws *services.WeatherService) *WeatherController {
 	return &WeatherController{weatherService: ws}
 }
 
-func (wc *WeatherController) GetWeather(c echo.Context) (err error) {
+func (wc *WeatherController) GetWeather(c echo.Context) error {
 	req := c.Request()
 	headers := req.Header
 	latHeader := headers.Get("lat")
 	lonHeader := headers.Get("lon")
-	latitude, err := strconv.ParseFloat(latHeader, 32)
-	if err != nil {
-		return err
-	}
-	longitude, err := strconv.ParseFloat(lonHeader, 32)
+	weather, err := wc.weatherService.GetWeather(latHeader, lonHeader)
 	if err != nil {
 		return err
 	}
 
-	weather, err := wc.weatherService.GetWeather(latitude, longitude)
-	if err != nil {
-		return err
-	}
 	return c.JSON(http.StatusOK, weather)
 }
