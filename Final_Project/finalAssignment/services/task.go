@@ -15,7 +15,7 @@ func NewTaskService(tr interfaces.ITaskRepository) *TaskService {
 }
 
 func (ts *TaskService) CreateTask(text string, listId int, completed bool) (models.Task, error) {
-	task := models.Task{Text: text, ListID: int(listId), Completed: completed}
+	task := models.Task{Text: text, ListID: listId, Completed: completed}
 	id, err := ts.taskRepository.InsertTask(task)
 	if err != nil {
 		return task, fmt.Errorf("error inserting task: %w", err)
@@ -32,7 +32,7 @@ func (ts *TaskService) CreateTask(text string, listId int, completed bool) (mode
 func (ts *TaskService) GetTasks(listId int) ([]models.Task, error) {
 	tasks, err := ts.taskRepository.GetTasks(listId)
 	if err != nil {
-		return tasks, fmt.Errorf("error getting task: %w", err)
+		return tasks, fmt.Errorf("error getting tasks: %w", err)
 	}
 
 	return tasks, nil

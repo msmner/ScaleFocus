@@ -34,36 +34,36 @@ func (ws *WeatherService) GetWeather(latHeader string, lonHeader string) (models
 	weatherResponse := models.WeatherResponse{}
 	latitude, err := strconv.ParseFloat(latHeader, 32)
 	if err != nil {
-		return weatherResponse, err
+		return weatherResponse, fmt.Errorf("error parsing latitude: %w", err)
 	}
 
 	longitude, err := strconv.ParseFloat(lonHeader, 32)
 	if err != nil {
-		return weatherResponse, err
+		return weatherResponse, fmt.Errorf("error parsing longitude: %w", err)
 	}
 
 	apiKey := os.Getenv("apiKey")
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", latitude, longitude, apiKey)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return weatherResponse, err
+		return weatherResponse, fmt.Errorf("error building request: %w", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return weatherResponse, err
+		return weatherResponse, fmt.Errorf("error making the request: %w", err)
 	}
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return weatherResponse, err
+		return weatherResponse, fmt.Errorf("error reading the response body: %w", err)
 	}
 
 	var response Response
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		return weatherResponse, err
+		return weatherResponse, fmt.Errorf("error unmarshaling the response body: %w", err)
 	}
 
 	weatherResponse.FormattedTemp = fmt.Sprintf("%.2f", response.Main.Temp)
