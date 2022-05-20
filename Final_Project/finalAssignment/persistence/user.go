@@ -67,7 +67,7 @@ func (ur *UserRepository) DeleteListFromUser(listId int, username string) error 
 		if err != nil {
 			return fmt.Errorf("error converting id string to id int delete list from user: %w", err)
 		}
-		if id == int(listId) {
+		if id == listId {
 			listIdsSlice[i] = listIdsSlice[len(listIdsSlice)-1]
 			listIdsSlice[len(listIdsSlice)-1] = ""
 			listIdsSlice = listIdsSlice[:len(listIdsSlice)-1]
