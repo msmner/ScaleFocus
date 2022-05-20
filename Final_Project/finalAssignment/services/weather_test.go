@@ -1,7 +1,6 @@
 package services
 
 import (
-	"final/models"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,6 +15,6 @@ func TestGetWeather(t *testing.T) {
 	_, err = weatherService.GetWeather("32.42", "a")
 	assert.EqualError(t, err, "error parsing longitude: strconv.ParseFloat: parsing \"a\": invalid syntax")
 
-	expectedWeatherResponse := models.WeatherResponse{FormattedTemp: "32", Description: "test", City: "Sofiq"}
-	
+	//expectedWeatherResponse := models.WeatherResponse{FormattedTemp: "32", Description: "test", City: "Sofiq"}
+
 }
